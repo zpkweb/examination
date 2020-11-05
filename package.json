@@ -1,7 +1,7 @@
 {
   "name": "my_midway_project",
   "version": "1.0.0",
-  "description": "{{description}}",
+  "description": "{{midway}}",
   "private": true,
   "dependencies": {
     "@midwayjs/web": "^2.3.0",

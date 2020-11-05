@@ -11,5 +11,26 @@ export default (appInfo: EggAppInfo) => {
   // add your config here
   config.middleware = [];
 
+  config.security = {
+    // 关闭 csrf
+    csrf: {
+      enable: false,
+    },
+    // 跨域白名单
+    domainWhiteList: [ 'http://localhost:7001' ],
+  };
+
+    config.orm = {
+      "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "username": "root",
+      "password": "root1234",
+      "database": "test",
+      "synchronize": true,
+      "logging": false
+    }
+
+
   return config;
 };

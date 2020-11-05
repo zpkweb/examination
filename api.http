@@ -1,0 +1,17 @@
+@baseUrl = http://127.0.0.1:7002
+
+
+###
+
+GET  {{baseUrl}}
+
+####
+
+#
+POST {{baseUrl}}/api/get_user?uid=111
+Content-Type: application/json
+###
+
+###
+GET {{baseUrl}}/photo/getAll
+###
