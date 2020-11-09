@@ -5,24 +5,25 @@ import { InfoDTO } from '../dto/info';
 @Provide()
 @Controller('/api/info')
 export class InfoController {
+
   @Inject()
   infoService: InfoService;
 
   @Post()
   async setInfo(@Body(ALL) infoBody: InfoDTO) {
-    const info = await this.infoService.setInfo(infoBody);
-    return { success: true, message: 'OK', data: info };
+    const data = await this.infoService.setInfo(infoBody);
+    return data
   }
 
   @Get()
   async getInfo() {
-    const infos = await this.infoService.getInfo();
-    return { success: true, message: 'OK', data: infos };
+    const data = await this.infoService.getInfo();
+    return data
   }
 
   @Post('/del')
   async delInfo(@Body(ALL) infoBody) {
-    const info = await this.infoService.delInfo(infoBody);
-    return { success: true, message: 'OK', data: info };
+    const data = await this.infoService.delInfo(infoBody);
+    return data
   }
 }

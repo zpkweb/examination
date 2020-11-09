@@ -3,27 +3,28 @@ import { TypeService } from '../service/type';
 import { TypeDTO } from '../dto/type';
 
 @Provide()
-@Controller('/')
+@Controller('/api/type')
 export class TypeController {
+
   @Inject()
   typeService: TypeService;
 
-  @Post('/api/type')
+  @Post()
   async setType(@Body(ALL) typeBody: TypeDTO) {
-    const type = await this.typeService.setType(typeBody);
-    return { success: true, message: 'OK', data: type };
+    const data = await this.typeService.setType(typeBody);
+    return data
   }
 
-  @Get('/api/type')
-  @Get('/api/type/:ID')
+  @Get()
+  @Get('/:ID')
   async getTypes(@Param() ID, @Query() id) {
-    const types = await this.typeService.getType(ID||id);
-    return { success: true, message: 'OK', data: types };
+    const data = await this.typeService.getType(ID||id);
+    return data
   }
 
-  @Post('/api/type/del')
+  @Post('/del')
   async delType(@Body(ALL) typeBody) {
-    const type = await this.typeService.delType(typeBody);
-    return { success: true, message: 'OK', data: type };
+    const data = await this.typeService.delType(typeBody);
+    return data
   }
 }

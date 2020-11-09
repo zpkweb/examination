@@ -11,22 +11,41 @@ export class TypeService {
   typeEntity: Repository<TypeEntity>;
 
   async setType(payload) {
-    let typeId;
-    await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(TypeEntity)
-      .values({
-        name: payload.name
-      })
-      .execute()
-      .then((res) => {
-        typeId = res.identifiers[0].id;
-      })
-    for (let item of payload.tags) {
-
-      let tagId;
+    // 查找类型
+    let type:any = await getConnection()
+    .createQueryBuilder()
+    .select("type")
+    .from(TypeEntity, "type")
+    .leftJoinAndSelect("type.tags", "tags")
+    .where("type.name = :name", { name: payload.name })
+    .getOne();
+    // 没有类型，创建类型
+    if(!type){
       await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(TypeEntity)
+        .values({
+          name: payload.name
+        })
+        .execute()
+        .then((res) => {
+          type = res.identifiers[0]
+        })
+    }
+    // 遍历tags
+    for (let item of payload.tags) {
+      // 查找标签
+      let tag:any = await getConnection()
+      .createQueryBuilder()
+      .select("tag")
+      .from(TagEntity, "tag")
+      .where("tag.name = :name", { name: item.name })
+      .andWhere("type.name = :typename", { typename: payload.name })
+      .getOne();
+      // 没有类型，创建类型
+      if(!tag){
+        await getConnection()
         .createQueryBuilder()
         .insert()
         .into(TagEntity)
@@ -34,14 +53,17 @@ export class TypeService {
           name: item.name
         })
         .execute()
-        .then(async (res) => {
-          tagId = res.identifiers[0].id;
-          await getConnection()
-            .createQueryBuilder()
-            .relation(TypeEntity, "tags")
-            .of(typeId)
-            .add(tagId);
+        .then((res) => {
+          tag = res.identifiers[0]
         })
+      }
+      await getConnection()
+        .createQueryBuilder()
+        .relation(TypeEntity, "tags")
+        .of(type.id)
+        .add(tag.id);
+
+
     }
 
     return await getConnection()
@@ -49,7 +71,7 @@ export class TypeService {
       .select("type")
       .from(TypeEntity, "type")
       .leftJoinAndSelect("type.tags", "tags")
-      .where("type.id = :id", { id: typeId })
+      .where("type.id = :id", { id: type.id })
       .getOne();
 
 

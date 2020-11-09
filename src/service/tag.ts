@@ -11,14 +11,43 @@ export class TagService {
   tagEntity: Repository<TagEntity>;
 
   async setTag(payload) {
-    let type = await getConnection()
+    // 查找类型
+    let type:any = await getConnection()
       .createQueryBuilder()
       .select("type")
       .from(TypeEntity, "type")
       .where("type.name = :name", { name: payload.type })
       .getOne();
-    let tagId;
-    await getConnection()
+
+    // 如果没有类型，则创建类型
+    if(!type){
+      await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(TypeEntity)
+      .values({
+        name: payload.type
+      })
+      .execute()
+      .then((res) => {
+        type = res.identifiers[0];
+      })
+    }
+    // 查找标签
+    let tag:any = await getConnection()
+      .createQueryBuilder()
+      .select("tag")
+      .from(TagEntity, "tag")
+      .leftJoinAndSelect("tag.type", "type")
+      .where("tag.name = :name", { name: payload.name })
+      .andWhere("type.name = :typename", { typename: payload.type })
+      .getOne();
+
+    if(tag){
+      return tag;
+    }
+    // 如果没有标签，则创建标签
+    tag = await getConnection()
       .createQueryBuilder()
       .insert()
       .into(TagEntity)
@@ -26,20 +55,18 @@ export class TagService {
         name: payload.name
       })
       .execute()
-      .then(async (res) => {
-        tagId = res.identifiers[0].id;
-        await getConnection()
+    await getConnection()
           .createQueryBuilder()
           .relation(TagEntity, 'type')
-          .of(tagId)
+          .of(tag.identifiers[0].id)
           .set(type.id)
-      })
 
     return await getConnection()
       .createQueryBuilder()
       .select("tag")
       .from(TagEntity, "tag")
-      .where("tag.id = :id", { id: tagId })
+      .leftJoinAndSelect("tag.type", "type")
+      .where("tag.id = :id", { id: tag.identifiers[0].id })
       .getOne();
   }
 
@@ -64,14 +91,14 @@ export class TagService {
 
   async delTag(payload) {
     if (payload.id) {
-      return await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .delete()
         .from(TagEntity)
         .where("id = :id", { id: payload.id })
         .execute();
     } else {
-      return await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .delete()
         .from(TagEntity)

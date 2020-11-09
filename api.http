@@ -56,11 +56,9 @@ POST {{baseUrl}}/api/type
 Content-Type: application/json
 
 {
-  "name": "TEST2",
+  "name": "WEB",
   "tags": [{
     "name": "test1"
-  },{
-    "name": "test2"
   }]
 }
 ###
@@ -85,8 +83,8 @@ POST {{baseUrl}}/api/tag
 Content-Type: application/json
 
 {
-  "type": "WEB",
-  "name": "sass"
+  "type": "JAVA",
+  "name": "html"
 }
 ###
 ###
