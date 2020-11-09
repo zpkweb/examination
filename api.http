@@ -1,4 +1,4 @@
-@baseUrl = http://127.0.0.1:7002
+@baseUrl = http://127.0.0.1:7001
 
 
 ###
@@ -7,11 +7,96 @@ GET  {{baseUrl}}
 
 ####
 
-#
-POST {{baseUrl}}/api/get_user?uid=111
-Content-Type: application/json
-###
 
 ###
-GET {{baseUrl}}/photo/getAll
+POST {{baseUrl}}/api/register
+Content-Type: application/json
+
+{
+  "name": "zpk"
+}
+###
+
+####
+GET {{baseUrl}}/api/register
+####
+
+
+
+
+
+
+###
+POST {{baseUrl}}/api/info
+Content-Type: application/json
+
+{
+  "name": "phone",
+  "show": true
+}
+###
+###
+GET  {{baseUrl}}/api/info
+###
+###
+POST {{baseUrl}}/api/info/del
+Content-Type: application/json
+
+{
+  "id": 0
+}
+###
+
+
+
+
+
+###
+POST {{baseUrl}}/api/type
+Content-Type: application/json
+
+{
+  "name": "TEST2",
+  "tags": [{
+    "name": "test1"
+  },{
+    "name": "test2"
+  }]
+}
+###
+###
+GET  {{baseUrl}}/api/type
+###
+###
+POST {{baseUrl}}/api/type/del
+Content-Type: application/json
+
+{
+  "id": 0
+}
+###
+
+
+
+
+
+###
+POST {{baseUrl}}/api/tag
+Content-Type: application/json
+
+{
+  "type": "WEB",
+  "name": "sass"
+}
+###
+###
+GET  {{baseUrl}}/api/tag
+###
+###
+POST {{baseUrl}}/api/tag/del
+Content-Type: application/json
+
+{
+  "id": 0
+}
 ###

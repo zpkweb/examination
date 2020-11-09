@@ -20,16 +20,29 @@ export default (appInfo: EggAppInfo) => {
     domainWhiteList: [ 'http://localhost:7001' ],
   };
 
-    config.orm = {
-      "type": "mysql",
-      "host": "localhost",
-      "port": 3306,
-      "username": "root",
-      "password": "root1234",
-      "database": "test",
-      "synchronize": true,
-      "logging": false
-    }
+  config.orm = {
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "root1234",
+    "database": "test",
+    "synchronize": true,
+    "logging": false
+  }
+
+  config.view = {
+    defaultViewEngine: 'nunjucks',
+    mapping: {
+      '.nj': 'nunjucks',
+      '.njk': 'nunjucks',
+    },
+  };
+
+  // config.static = {
+  //   enable: true,
+  //   package: 'egg-static',
+  // };
 
 
   return config;

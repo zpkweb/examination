@@ -1,0 +1,42 @@
+{% block css %}
+<link rel="stylesheet" href="/public/css/index.css" />
+{% endblock %}
+<form action="/api/register" method="post">
+<h3>info</h3>
+<ul>
+  {% for item in data.info %}
+  <li>
+    {{ item.name }}
+    <input type="text"  />
+  </li>
+
+  {% else %}
+  <p>This would display if the 'info' collection were empty</p>
+  {% endfor %}
+</ul>
+
+<h3>type</h3>
+<ul>
+  {% for item in data.type %}
+  <li>
+    <button>{{ item.name }}</button>
+  </li>
+  {% else %}
+  <p>This would display if the 'type' collection were empty</p>
+  {% endfor %}
+</ul>
+
+<h3>tag</h3>
+<ul>
+  {% for item in data.tag %}
+  <li>
+    {{ item.name }}
+    <input type="text"  />
+  </li>
+  {% else %}
+  <p>This would display if the 'tag' collection were empty</p>
+  {% endfor %}
+</ul>
+
+<button type="submit">提交</button>
+</form>
