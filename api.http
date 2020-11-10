@@ -9,19 +9,45 @@ GET  {{baseUrl}}
 
 
 ###
-POST {{baseUrl}}/api/register
+POST {{baseUrl}}/api/user
 Content-Type: application/json
 
 {
-  "name": "zpk"
+  "name": "zpk",
+  "phone": "18612875765",
+  "typeId": 28,
+  "tagsId": [54, 55]
 }
 ###
 
 ####
-GET {{baseUrl}}/api/register
+GET {{baseUrl}}/api/user
 ####
 
+###
+POST {{baseUrl}}/api/user/del
+Content-Type: application/json
 
+{
+  "Id": 10
+}
+###
+###
+POST {{baseUrl}}/api/user/login
+Content-Type: application/json
+
+{
+  "name": "test2",
+  "phone": "18612875765"
+}
+
+
+###
+
+
+####
+GET {{baseUrl}}/api/user/register
+####
 
 
 
@@ -31,7 +57,7 @@ POST {{baseUrl}}/api/info
 Content-Type: application/json
 
 {
-  "name": "phone",
+  "name": "name",
   "show": true
 }
 ###
@@ -56,9 +82,9 @@ POST {{baseUrl}}/api/type
 Content-Type: application/json
 
 {
-  "name": "WEB",
+  "name": "JAVA",
   "tags": [{
-    "name": "test1"
+    "name": "test4"
   }]
 }
 ###
@@ -66,7 +92,7 @@ Content-Type: application/json
 GET  {{baseUrl}}/api/type
 ###
 ###
-POST {{baseUrl}}/api/type/del
+POST {{baseUrl}}/api/type/del/31
 Content-Type: application/json
 
 {
@@ -91,7 +117,7 @@ Content-Type: application/json
 GET  {{baseUrl}}/api/tag
 ###
 ###
-POST {{baseUrl}}/api/tag/del
+POST {{baseUrl}}/api/tag/del/67
 Content-Type: application/json
 
 {

@@ -1,0 +1,89 @@
+{% block css %}
+<link rel="stylesheet" href="/public/css/index.css" />
+{% endblock %}
+<ul id="typeUl">
+{% for item in data %}
+  <li>
+    {{ item.name }}
+    <button class="typeDel" data-id={{item.id}}>删除</button>
+  </li>
+
+  {% endfor %}
+</ul>
+<div>
+<input id="typeNew" type="text" />
+<button id="typeAdd">新增</button>
+</div>
+
+<script>
+typeAdd.onclick = function(){
+  fetch('/api/type',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": typeNew.value,
+      "show": true
+    })
+  })
+  .then(function(res){
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      typeNew.value = '';
+      var li = document.createElement('li');
+      var liText = document.createTextNode(data.data.name)
+
+      var button = document.createElement('button');
+      var buttonText = document.createTextNode("删除");
+      button.class = 'typeDel';
+      button.setAttribute('data-id', data.data.id);
+      button.onclick = function() {
+        typeDel(this)
+      }
+      button.appendChild(buttonText)
+
+      li.appendChild(liText);
+      li.appendChild(button);
+      typeUl.appendChild(li);
+    }
+  })
+
+}
+var typeArray = document.getElementsByClassName("del");
+for(var item of typeArray){
+  item.onclick = function() {
+    typeDel(this)
+  }
+}
+
+function typeDel(target) {
+  fetch('/api/type/del',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "Id": target.dataset.id
+    })
+  })
+  .then((res) =>{
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      console.log(target)
+      target.parentNode.remove();
+    }
+  })
+}
+
+
+</script>
+

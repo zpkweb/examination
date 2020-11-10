@@ -1,0 +1,89 @@
+{% block css %}
+<link rel="stylesheet" href="/public/css/index.css" />
+{% endblock %}
+<ul id="tagUl">
+{% for item in data %}
+  <li>
+    {{ item.name }}
+    <button class="tagDel" data-id={{item.id}}>删除</button>
+  </li>
+
+  {% endfor %}
+</ul>
+<div>
+<input id="tagNew" type="text" />
+<button id="tagAdd">新增</button>
+</div>
+
+<script>
+tagAdd.onclick = function(){
+  fetch('/api/tag',{
+    method: 'POST',
+    headers: {
+      'Content-tag': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": tagNew.value,
+      "show": true
+    })
+  })
+  .then(function(res){
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      tagNew.value = '';
+      var li = document.createElement('li');
+      var liText = document.createTextNode(data.data.name)
+
+      var button = document.createElement('button');
+      var buttonText = document.createTextNode("删除");
+      button.class = 'tagDel';
+      button.setAttribute('data-id', data.data.id);
+      button.onclick = function() {
+        tagDel(this)
+      }
+      button.appendChild(buttonText)
+
+      li.appendChild(liText);
+      li.appendChild(button);
+      tagUl.appendChild(li);
+    }
+  })
+
+}
+var tagArray = document.getElementsByClassName("del");
+for(var item of tagArray){
+  item.onclick = function() {
+    tagDel(this)
+  }
+}
+
+function tagDel(target) {
+  fetch('/api/tag/del',{
+    method: 'POST',
+    headers: {
+      'Content-tag': 'application/json'
+    },
+    body: JSON.stringify({
+      "Id": target.dataset.id
+    })
+  })
+  .then((res) =>{
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      console.log(target)
+      target.parentNode.remove();
+    }
+  })
+}
+
+
+</script>
+

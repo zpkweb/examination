@@ -89,13 +89,13 @@ export class TagService {
     }
   }
 
-  async delTag(payload) {
-    if (payload.id) {
+  async delTag(id) {
+    if (id) {
       await getConnection()
         .createQueryBuilder()
         .delete()
         .from(TagEntity)
-        .where("id = :id", { id: payload.id })
+        .where("id = :id", { id: id })
         .execute();
     } else {
       await getConnection()

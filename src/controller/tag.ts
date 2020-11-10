@@ -11,22 +11,19 @@ export class TagController {
 
   @Post()
   async setTag(@Body(ALL) tagBody: TagDTO) {
-    const data = await this.tagService.setTag(tagBody);
-    return data
+    return await this.tagService.setTag(tagBody);
   }
-
 
   @Get()
   @Get('/:ID')
   async getTags(@Param() ID, @Query() id) {
-    const data = await this.tagService.getTag(ID||id);
-    return data
+    return await this.tagService.getTag(ID||id);
   }
 
   @Post('/del')
-  async delTag(@Body(ALL) tagBody) {
-    const data = await this.tagService.delTag(tagBody);
-    return data
+  @Post('/del/:ID')
+  async delTag(@Param() ID, @Query() id) {
+    return await this.tagService.delTag(ID||id);
   }
 
 }

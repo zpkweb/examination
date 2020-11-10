@@ -1,0 +1,89 @@
+{% block css %}
+<link rel="stylesheet" href="/public/css/index.css" />
+{% endblock %}
+<ul id="infoUl">
+{% for item in data %}
+  <li>
+    {{ item.name }}
+    <button class="infoDel" data-id={{item.id}}>删除</button>
+  </li>
+
+  {% endfor %}
+</ul>
+<div>
+<input id="infoNew" type="text" />
+<button id="infoAdd">新增</button>
+</div>
+
+<script>
+infoAdd.onclick = function(){
+  fetch('/api/info',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": infoNew.value,
+      "show": true
+    })
+  })
+  .then(function(res){
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      infoNew.value = '';
+      var li = document.createElement('li');
+      var liText = document.createTextNode(data.data.name)
+
+      var button = document.createElement('button');
+      var buttonText = document.createTextNode("删除");
+      button.class = 'infoDel';
+      button.setAttribute('data-id', data.data.id);
+      button.onclick = function() {
+        infoDel(this)
+      }
+      button.appendChild(buttonText)
+
+      li.appendChild(liText);
+      li.appendChild(button);
+      infoUl.appendChild(li);
+    }
+  })
+
+}
+var infoArray = document.getElementsByClassName("del");
+for(var item of infoArray){
+  item.onclick = function() {
+    infoDel(this)
+  }
+}
+
+function infoDel(target) {
+  fetch('/api/info/del',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "Id": target.dataset.id
+    })
+  })
+  .then((res) =>{
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      console.log(target)
+      target.parentNode.remove();
+    }
+  })
+}
+
+
+</script>
+

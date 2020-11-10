@@ -9,31 +9,70 @@ export class InfoService {
   infoEntity: Repository<InfoEntity>;
 
   async setInfo(payload) {
-    let info = new InfoEntity();
-    info.name = payload.name;
-    info.show = payload.show;
+    // 查找类型
+    let type:any = await getConnection()
+      .createQueryBuilder()
+      .select("info")
+      .from(InfoEntity, "info")
+      .where("info.name = :name", { name: payload.name })
+      .getOne();
+    if(type){
+      return type
+    }
+    // 如果没有类型，则创建类型
+    await getConnection()
+    .createQueryBuilder()
+    .insert()
+    .into(InfoEntity)
+    .values({
+      name: payload.name,
+      show: payload.show
+    })
+    .execute();
 
-    return await this.infoEntity.save(info);
+    return await getConnection()
+    .createQueryBuilder()
+    .select("info")
+    .from(InfoEntity, "info")
+    .where("info.name = :name", { name: payload.name })
+    .getOne();
+
+
   }
 
-  async getInfo() {
-    return await this.infoEntity.find();
-  }
-
-  async delInfo(payload) {
-    if (payload.id) {
+  async getInfo(id) {
+    if (id) {
       return await getConnection()
+        .createQueryBuilder()
+        .select("tag")
+        .from(InfoEntity, "tag")
+        .where("tag.id = :id", { id: id })
+        .getOne();
+    } else {
+      return await getConnection()
+        .createQueryBuilder()
+        .select("tag")
+        .from(InfoEntity, "tag")
+        .getMany();
+    }
+  }
+
+  async delInfo(id) {
+    if (id) {
+      await getConnection()
         .createQueryBuilder()
         .delete()
         .from(InfoEntity)
-        .where("id = :id", { id: payload.id })
+        .where("id = :id", { id: id })
         .execute();
     } else {
-      return await getConnection()
+      await getConnection()
         .createQueryBuilder()
         .delete()
         .from(InfoEntity)
         .execute();
     }
   }
+
+
 }

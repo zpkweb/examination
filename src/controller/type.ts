@@ -11,20 +11,21 @@ export class TypeController {
 
   @Post()
   async setType(@Body(ALL) typeBody: TypeDTO) {
+    console.log("start setType")
     const data = await this.typeService.setType(typeBody);
-    return data
+    console.log(data)
+    return data;
   }
 
   @Get()
   @Get('/:ID')
   async getTypes(@Param() ID, @Query() id) {
-    const data = await this.typeService.getType(ID||id);
-    return data
+    return await this.typeService.getType(ID||id);
   }
 
   @Post('/del')
-  async delType(@Body(ALL) typeBody) {
-    const data = await this.typeService.delType(typeBody);
-    return data
+  @Post('/del/:ID')
+  async delType(@Param() ID, @Query() id) {
+    return await this.typeService.delType(ID||id);
   }
 }

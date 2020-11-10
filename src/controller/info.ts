@@ -1,4 +1,4 @@
-import { ALL, Body, Controller, Get, Inject, Post, Provide } from '@midwayjs/decorator';
+import { ALL, Body, Controller, Get, Inject, Post, Provide, Param, Query } from '@midwayjs/decorator';
 import { InfoService } from '../service/info';
 import { InfoDTO } from '../dto/info';
 
@@ -11,19 +11,18 @@ export class InfoController {
 
   @Post()
   async setInfo(@Body(ALL) infoBody: InfoDTO) {
-    const data = await this.infoService.setInfo(infoBody);
-    return data
+    return await this.infoService.setInfo(infoBody);
   }
 
   @Get()
-  async getInfo() {
-    const data = await this.infoService.getInfo();
-    return data
+  @Get('/:ID')
+  async getTags(@Param() ID, @Query() id) {
+    return await this.infoService.getInfo(ID||id);
   }
 
   @Post('/del')
-  async delInfo(@Body(ALL) infoBody) {
-    const data = await this.infoService.delInfo(infoBody);
-    return data
+  @Post('/del/:ID')
+  async delInfo(@Body() Id, @Param() ID, @Query() id) {
+    return await this.infoService.delInfo(ID||Id||id);
   }
 }
