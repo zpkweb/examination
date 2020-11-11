@@ -3,16 +3,17 @@
 {% endblock %}
 <ul id="tagUl">
 {% for item in data %}
+
   <li>
-    {{ item.name }}
+    {{item.type.name}}-{{ item.name }}
     <button class="tagDel" data-id={{item.id}}>删除</button>
   </li>
 
   {% endfor %}
 </ul>
 <div>
-<input id="tagNew" type="text" />
-<button id="tagAdd">新增</button>
+{# <input id="tagNew" type="text" /> #}
+{# <button id="tagAdd">新增</button> #}
 </div>
 
 <script>
@@ -20,7 +21,7 @@ tagAdd.onclick = function(){
   fetch('/api/tag',{
     method: 'POST',
     headers: {
-      'Content-tag': 'application/json'
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       "name": tagNew.value,
@@ -54,7 +55,7 @@ tagAdd.onclick = function(){
   })
 
 }
-var tagArray = document.getElementsByClassName("del");
+var tagArray = document.getElementsByClassName("tagDel");
 for(var item of tagArray){
   item.onclick = function() {
     tagDel(this)
@@ -65,7 +66,7 @@ function tagDel(target) {
   fetch('/api/tag/del',{
     method: 'POST',
     headers: {
-      'Content-tag': 'application/json'
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       "Id": target.dataset.id

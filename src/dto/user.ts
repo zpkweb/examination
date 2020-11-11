@@ -1,7 +1,7 @@
 import { Rule, RuleType } from '@midwayjs/decorator';
 
 
-export class UserDTO {
+export class RegisterDTO {
   @Rule(RuleType.string().required())
   name: string;
 
@@ -13,4 +13,12 @@ export class UserDTO {
 
   @Rule(RuleType.array().required())
   tagsId: Array<number>;
+}
+
+export class LoginDTO {
+  @Rule(RuleType.string().required())
+  name: string;
+
+  @Rule(RuleType.string().required())
+  phone: string;
 }

@@ -10,10 +10,10 @@ export class TypeController {
   typeService: TypeService;
 
   @Post()
+  // @Validate()
   async setType(@Body(ALL) typeBody: TypeDTO) {
-    console.log("start setType")
     const data = await this.typeService.setType(typeBody);
-    console.log(data)
+    console.log("setType", data)
     return data;
   }
 
@@ -25,7 +25,7 @@ export class TypeController {
 
   @Post('/del')
   @Post('/del/:ID')
-  async delType(@Param() ID, @Query() id) {
-    return await this.typeService.delType(ID||id);
+  async delType(@Body() Id, @Param() ID, @Query() id) {
+    return await this.typeService.delType(ID||Id||id);
   }
 }

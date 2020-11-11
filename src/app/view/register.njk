@@ -1,42 +1,113 @@
 {% block css %}
 <link rel="stylesheet" href="/public/css/index.css" />
 {% endblock %}
-<form action="/api/register" method="post">
+<div action="/api/register" method="post">
 <h3>info</h3>
 <ul>
-  {% for item in data.info %}
+  {% for item in data.info -%}
   <li>
     {{ item.name }}
-    <input type="text"  />
+    <input id="input{{item.name}}" class="info-input info-{{item.name}}" type="text"  />
   </li>
 
-  {% else %}
+  {%- else %}
   <p>This would display if the 'info' collection were empty</p>
   {% endfor %}
 </ul>
 
 <h3>type</h3>
-<ul>
+<ul class="type-ul">
   {% for item in data.type %}
-  <li>
-    <button>{{ item.name }}</button>
+  <li class="type-li {{'active' if loop.first else ''}}" data-id="{{item.id}}">
+    <a href="javascript:;">{{ item.name }}</a>
   </li>
+
   {% else %}
   <p>This would display if the 'type' collection were empty</p>
   {% endfor %}
 </ul>
 
 <h3>tag</h3>
-<ul>
-  {% for item in data.tag %}
-  <li>
-    {{ item.name }}
-    <input type="text"  />
-  </li>
-  {% else %}
-  <p>This would display if the 'tag' collection were empty</p>
-  {% endfor %}
-</ul>
 
-<button type="submit">提交</button>
-</form>
+{% for item in data.type %}
+<ul class="tags-ul {{'active' if loop.first else ''}}">
+    {% for item in item.tags %}
+    <li>
+      <input class="tags-input" type="checkbox" data-id="{{item.id}}" /> {{ item.name }}
+
+    </li>
+    {% endfor %}
+  </ul>
+{% endfor %}
+
+
+<button id="register">提交</button>
+</div>
+
+<script>
+var typeLi = document.getElementsByClassName('type-li');
+var tagUl = document.getElementsByClassName('tags-ul');
+
+for(let i in typeLi){
+    typeLi[i].onclick = function() {
+      for(var j=0;j<typeLi.length;j++){
+        typeLi[j].classList.remove('active')
+      }
+      typeLi[i].classList.add('active')
+
+      for(var j=0;j<tagUl.length;j++){
+        tagUl[j].classList.remove('active')
+      }
+      tagUl[i].classList.add('active')
+    }
+}
+
+register.onclick = function(){
+  // info-input
+
+  // type-li
+  var type;
+  for(var i=0;i<typeLi.length;i++){
+    if(typeLi[i].classList.contains('active')){
+      type = typeLi[i].dataset.id
+    }
+  }
+  // tags-input
+  var tags=[];
+  for(var i=0;i<tagUl.length;i++){
+    if(tagUl[i].classList.contains('active')){
+      var tagsInputs = tagUl[i].getElementsByClassName('tags-input');
+      for(var j=0;j<tagsInputs.length;j++){
+        if(tagsInputs[j].checked){
+          tags.push(tagsInputs[j].dataset.id)
+        }
+      }
+
+    }
+  }
+
+  fetch('/api/user/register',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": inputname.value,
+      "phone": inputphone.value,
+      "typeId": type,
+      "tagsId": tags,
+
+    })
+  })
+  .then((res) =>{
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      console.log(data)
+    }
+  })
+}
+</script>

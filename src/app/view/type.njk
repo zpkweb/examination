@@ -3,16 +3,28 @@
 {% endblock %}
 <ul id="typeUl">
 {% for item in data %}
-  <li>
-    {{ item.name }}
-    <button class="typeDel" data-id={{item.id}}>删除</button>
+  <li data-name={{item.name}}>
+    <p>{{ item.name }}</p>
+    <button class="typeDel" data-id={{item.id}}>删除 type</button>
+    <ul class="tagUl">
+      {% for tagitem in item.tags %}
+      <li>
+        <p>{{ tagitem.name }}</p>
+        <button class="tagDel" data-id={{tagitem.id}}>删除 tag</button>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="tagFooter">
+      <input class="tagNew" type="text" data-id={{item.id}} />
+      <button class="tagAdd" data-id={{item.id}}>添加 tag</button>
+      </div>
   </li>
 
   {% endfor %}
 </ul>
-<div>
+<div class="typeFooter">
 <input id="typeNew" type="text" />
-<button id="typeAdd">新增</button>
+<button id="typeAdd">添加 type</button>
 </div>
 
 <script>
@@ -23,8 +35,7 @@ typeAdd.onclick = function(){
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      "name": typeNew.value,
-      "show": true
+      "name": typeNew.value
     })
   })
   .then(function(res){
@@ -36,26 +47,55 @@ typeAdd.onclick = function(){
     if(data.success){
       typeNew.value = '';
       var li = document.createElement('li');
+      li.setAttribute('data-name', data.data.name)
+      var p = document.createElement('p');
       var liText = document.createTextNode(data.data.name)
+      p.appendChild(liText)
 
       var button = document.createElement('button');
-      var buttonText = document.createTextNode("删除");
       button.class = 'typeDel';
       button.setAttribute('data-id', data.data.id);
       button.onclick = function() {
         typeDel(this)
       }
+      var buttonText = document.createTextNode("删除 type");
+
       button.appendChild(buttonText)
 
-      li.appendChild(liText);
+      li.appendChild(p);
       li.appendChild(button);
+
+
+
+      var tagUl = document.createElement('ul');
+      tagUl.class = 'tagUl';
+      li.appendChild(tagUl);
+
+      var tagFooter = document.createElement('div');
+      var tagNew = document.createElement('input');
+      tagNew.class = 'tagNew';
+      tagNew.type = 'text';
+      tagNew.setAttribute('data-id', data.data.id);
+
+      var tagAddDom = document.createElement('button');
+      tagAddDom.calss = 'tagAdd';
+      tagAddDom.setAttribute('data-id', data.data.id);
+      var tagAddText = document.createTextNode("添加 tag");
+      tagAddDom.appendChild(tagAddText);
+      tagAddDom.onclick = function() {
+        tagAdd(this);
+      }
+
+      tagFooter.appendChild(tagNew);
+      tagFooter.appendChild(tagAddDom);
+      li.appendChild(tagFooter);
       typeUl.appendChild(li);
     }
   })
 
 }
-var typeArray = document.getElementsByClassName("del");
-for(var item of typeArray){
+var typeDelArray = document.getElementsByClassName("typeDel");
+for(var item of typeDelArray){
   item.onclick = function() {
     typeDel(this)
   }
@@ -84,6 +124,83 @@ function typeDel(target) {
   })
 }
 
+
+var tagAddArray = document.getElementsByClassName("tagAdd");
+for(var item of tagAddArray){
+  item.onclick = function() {
+    tagAdd(this)
+  }
+}
+
+function tagAdd(target){
+  fetch('/api/tag',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "type": target.parentNode.parentNode.dataset.name,
+      "name": target.previousElementSibling.value
+    })
+  })
+  .then(function(res){
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      target.previousElementSibling.value = '';
+      var li = document.createElement('li');
+      var p = document.createElement('p');
+      var liText = document.createTextNode(data.data.name)
+
+      var button = document.createElement('button');
+      var buttonText = document.createTextNode("删除 tag");
+      button.class = 'tagDel';
+      button.setAttribute('data-id', data.data.id);
+      button.onclick = function() {
+        tagDel(this)
+      }
+      button.appendChild(buttonText)
+
+      p.appendChild(liText);
+      li.appendChild(p);
+      li.appendChild(button);
+      target.parentNode.previousElementSibling.appendChild(li);
+    }
+  })
+}
+
+var tagDelArray = document.getElementsByClassName("tagDel");
+for(var item of tagDelArray){
+  item.onclick = function() {
+    tagDel(this)
+  }
+}
+
+function tagDel(target) {
+  fetch('/api/tag/del',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "Id": target.dataset.id
+    })
+  })
+  .then((res) =>{
+    return res.json()
+  }, function(err){
+    console.log(err)
+  })
+  .then(data => {
+    if(data.success){
+      console.log(target)
+      target.parentNode.remove();
+    }
+  })
+}
 
 </script>
 

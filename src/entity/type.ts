@@ -17,6 +17,8 @@ export class TypeEntity {
   })
   tags: TagEntity[]
 
-  @OneToMany(type => UserEntity, userEntity => userEntity.type)
-  User: UserEntity[]
+  @OneToMany(type => UserEntity, userEntity => userEntity.type,{
+    onDelete: 'CASCADE'
+  })
+  user: UserEntity[]
 }

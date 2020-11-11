@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, Brackets } from 'typeorm';
 import { TagEntity } from '../entity/tag';
 import { TypeEntity } from '../entity/type';
 
@@ -11,14 +11,15 @@ export class TagService {
   tagEntity: Repository<TagEntity>;
 
   async setTag(payload) {
+
     // 查找类型
     let type:any = await getConnection()
       .createQueryBuilder()
       .select("type")
       .from(TypeEntity, "type")
-      .where("type.name = :name", { name: payload.type })
+      .where("type.name = :name OR type.id = :id", { name: payload.type, id: payload.id })
       .getOne();
-
+    console.log(type)
     // 如果没有类型，则创建类型
     if(!type){
       await getConnection()
@@ -40,9 +41,12 @@ export class TagService {
       .from(TagEntity, "tag")
       .leftJoinAndSelect("tag.type", "type")
       .where("tag.name = :name", { name: payload.name })
-      .andWhere("type.name = :typename", { typename: payload.type })
+      .andWhere(new Brackets(qb => {
+        qb.where('type.name = :typeName', { typeName : payload.name })
+          .orWhere('type.id = :typeId', { typeId : payload.id })
+      }))
       .getOne();
-
+    console.log(tag)
     if(tag){
       return tag;
     }
@@ -90,6 +94,7 @@ export class TagService {
   }
 
   async delTag(id) {
+    console.log("delTag", id)
     if (id) {
       await getConnection()
         .createQueryBuilder()

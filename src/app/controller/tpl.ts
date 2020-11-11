@@ -24,6 +24,15 @@ export class TplController {
     await ctx.render('home.njk', { name: 'egg-view-nunjucks' });
   }
 
+  @Get('/user')
+  async getUser(ctx) {
+    const data = await this.userService.getUser(0);
+    console.log("data----", data)
+    await ctx.render('user.njk', {
+      data
+    });
+  }
+
   @Get('/register')
   async User(ctx) {
     const data = await this.userService.getRegister();
@@ -43,7 +52,7 @@ export class TplController {
   @Get('/type')
   async addType(ctx) {
     const data = await this.typeService.getType(0);
-    await ctx.render('info.njk', {
+    await ctx.render('type.njk', {
       data
     });
   }

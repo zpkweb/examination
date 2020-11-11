@@ -1,5 +1,6 @@
-import { Body, Controller, Inject, Post, Provide, ALL, Get, Param, Query } from '@midwayjs/decorator';
+import { Body, Controller, Inject, Post, Provide, ALL, Get, Param, Query, Validate } from '@midwayjs/decorator';
 import { UserService } from '../service/user';
+import { RegisterDTO, LoginDTO } from '../dto/user';
 
 @Provide()
 @Controller('/api/user')
@@ -8,9 +9,10 @@ export class UserController {
   @Inject()
   userService: UserService;
 
-  @Post()
-  async setUser(@Body(ALL) UserBody){
-    return await this.userService.setRegister(UserBody);
+  @Post('/register')
+  @Validate()
+  async setRegister(@Body(ALL) RegisterBody: RegisterDTO){
+    return await this.userService.setRegister(RegisterBody);
   }
 
   @Get('/register')
@@ -32,8 +34,9 @@ export class UserController {
   }
 
   @Post('/login')
-  async login(@Body(ALL) userBody) {
-    return await this.userService.login(userBody)
+  @Validate()
+  async login(@Body(ALL) loginBody: LoginDTO) {
+    return await this.userService.login(loginBody)
   }
 
 }

@@ -9,6 +9,6 @@ import { TypeController } from '../controller/type';
 @Aspect([InfoController, UserController, TagController, TypeController])
 export class ReportInfo implements IMethodAspect {
   async afterReturn(point: JoinPoint, result) {
-    return { success: true, message: 'OK', data: result }
+    return { success: true, message: 'OK', data: await result }
   }
 }

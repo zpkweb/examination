@@ -26,8 +26,8 @@ export class UserService {
     // 查询用户
     let user:any = await this.userEntity
       .createQueryBuilder('user')
-      .leftJoinAndSelect("user.type", "type")
-      .leftJoinAndSelect("user.tags", "tags")
+      // .leftJoinAndSelect("user.type", "type")
+      // .leftJoinAndSelect("user.tags", "tags")
       .where('user.name = :name', { name: payload.name })
       .getOne()
     // 如果用户不存在则创建用户

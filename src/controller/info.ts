@@ -1,4 +1,4 @@
-import { ALL, Body, Controller, Get, Inject, Post, Provide, Param, Query } from '@midwayjs/decorator';
+import { ALL, Body, Controller, Get, Inject, Post, Provide, Param, Query, Validate } from '@midwayjs/decorator';
 import { InfoService } from '../service/info';
 import { InfoDTO } from '../dto/info';
 
@@ -10,6 +10,7 @@ export class InfoController {
   infoService: InfoService;
 
   @Post()
+  @Validate()
   async setInfo(@Body(ALL) infoBody: InfoDTO) {
     return await this.infoService.setInfo(infoBody);
   }

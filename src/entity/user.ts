@@ -17,12 +17,12 @@ export class UserEntity {
   })
   phone: string;
 
-  @ManyToOne(type => TypeEntity, typeEntity => typeEntity.User,{
-    cascade: true
+  @ManyToOne(type => TypeEntity, typeEntity => typeEntity.user,{
+    // onDelete: 'CASCADE'
   })
   type: TypeEntity;
 
-  @ManyToMany(type => TagEntity, tagEntity => tagEntity.User,{
+  @ManyToMany(type => TagEntity, tagEntity => tagEntity.user,{
     cascade: true
   })
   @JoinTable()

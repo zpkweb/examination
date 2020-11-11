@@ -1,0 +1,57 @@
+{% block css %}
+<link rel="stylesheet" href="/public/css/index.css" />
+{% endblock %}
+
+
+{% for item in data %}
+  <div style="border: 1px solid red;margin-top:50px;">
+  <h3>info</h3>
+  <ul>
+
+  <li>
+    姓名：{{ item.name }}
+  </li>
+  <li>
+    手机：{{ item.phone }}
+  </li>
+
+
+  <h3>type</h3>
+    <li>
+      {{ item.type.name }}
+    </li>
+
+
+  <h3>tags</h3>
+
+  {% for item in item.tags %}
+    <li>
+      {{ item.name }}
+    </li>
+  {% endfor %}
+
+
+</ul>
+</div>
+{% endfor %}
+
+
+
+{#
+  <ul class="type-ul">
+    {% for item in item.type %}
+    <li class="type-li" data-id="{{item.id}}">
+      {{ item.name }}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h3>tags</h3>
+  <ul class="tags-ul">
+    {% for item in item.tags %}
+    <li class="tags-li" data-id="{{item.id}}">
+      {{ item.name }}
+    </li>
+
+    {% endfor %}
+  </ul> #}

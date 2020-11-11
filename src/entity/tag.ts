@@ -18,6 +18,6 @@ export class TagEntity {
   type: TypeEntity;
 
   @ManyToMany(type => UserEntity, userEntity => userEntity.tags)
-  User: UserEntity[]
+  user: UserEntity[]
 
 }

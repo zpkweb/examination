@@ -4,7 +4,7 @@
 <ul id="infoUl">
 {% for item in data %}
   <li>
-    {{ item.name }}
+    <p>{{ item.name }}</p>
     <button class="infoDel" data-id={{item.id}}>删除</button>
   </li>
 
@@ -36,6 +36,7 @@ infoAdd.onclick = function(){
     if(data.success){
       infoNew.value = '';
       var li = document.createElement('li');
+      var p = document.createElement('p');
       var liText = document.createTextNode(data.data.name)
 
       var button = document.createElement('button');
@@ -47,7 +48,8 @@ infoAdd.onclick = function(){
       }
       button.appendChild(buttonText)
 
-      li.appendChild(liText);
+      p.appendChild(liText);
+      li.appendChild(p);
       li.appendChild(button);
       infoUl.appendChild(li);
     }

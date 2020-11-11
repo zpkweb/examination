@@ -11,6 +11,7 @@ export class TagController {
 
   @Post()
   async setTag(@Body(ALL) tagBody: TagDTO) {
+    console.log("tagBody", tagBody)
     return await this.tagService.setTag(tagBody);
   }
 
@@ -22,8 +23,8 @@ export class TagController {
 
   @Post('/del')
   @Post('/del/:ID')
-  async delTag(@Param() ID, @Query() id) {
-    return await this.tagService.delTag(ID||id);
+  async delTag(@Body() Id, @Param() ID, @Query() id) {
+    return await this.tagService.delTag(ID||Id||id);
   }
 
 }
